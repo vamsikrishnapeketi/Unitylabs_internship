@@ -3,6 +3,7 @@ import { useState } from "react";
 export const Home = () => {
   const [query, setQuery] = useState("");
   const [data, setData] = useState();
+  const [selectedItem, setSelecteditem] = useState();
 
   const handleSubmit = async () => {
     try {
@@ -14,6 +15,11 @@ export const Home = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+  };
+
+  const handleClick = (itemId) => {
+    setSelecteditem(itemId);
+    console.log(selectedItem);
   };
 
   return (
@@ -38,10 +44,17 @@ export const Home = () => {
           </button>
         </div>
       </div>
-      <div className="flex justify-center mt-8">
-        <div className="box-border h-[400px] w-[470px] p-4 border-4 border-black text-ellipsis overflow-scroll">
-          {data && JSON.stringify(data)}
-        </div>
+      <div className="flex justify-left mt-8 text-sm">
+        <ul>
+          {data &&
+            data.hits.map((item) => (
+              <div key={item.objectID}>
+                <li onClick={() => handleClick(item.objectID)}>
+                  {item.title} ({item.url})
+                </li>
+              </div>
+            ))}
+        </ul>
       </div>
     </div>
   );
