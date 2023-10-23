@@ -4,12 +4,14 @@ import { Postdetail } from "./pages/Postdetail";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="details" element={<Postdetail />} />
-      </Routes>
-    </BrowserRouter>
+    <div className="border-x w-full max-w-7xl mx-auto px-4">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/details/:id" element={<Postdetail />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 };
 

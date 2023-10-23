@@ -7,9 +7,7 @@ import SelitemProvider from "./context/Selitem.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <SelitemProvider>
-      <div>
         <App />
-      </div>
     </SelitemProvider>
   </React.StrictMode>
 );

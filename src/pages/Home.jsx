@@ -1,79 +1,72 @@
-import { useContext, useState } from "react";
-import { Selitem } from "../context/Selitem";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export const Home = () => {
   const [query, setQuery] = useState("");
   const [data, setData] = useState();
+  const [loading, setLoading] = useState(false);
 
-  const { setSelobj } = useContext(Selitem);
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
+      setLoading(true);
       const response = await fetch(
         `http://hn.algolia.com/api/v1/search?query=${query}`
       );
       const queryData = await response.json();
       setData(queryData);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
-    }
-  };
-
-  const handleClick = async (itemId) => {
-    try {
-      const response = await fetch(
-        `http://hn.algolia.com/api/v1/items/${itemId}`
-      );
-      const queryData = await response.json();
-      setSelobj({
-        title: queryData.title,
-        points: queryData.points,
-        children: queryData.children,
-      });
-    } catch (error) {
-      console.error("Error fetching data:", error);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="h-screen ">
-      <div className="flex justify-center">
-        <div className="mt-8">
+    <div className="min-h-screen flex flex-col items-center gap-8 pt-20">
+      <form onSubmit={handleSubmit}>
+        <div className="flex items-center justify-center gap-4 w-full">
           <input
-            className="border-black border-2 w-70 md:w-96"
             type="text"
             value={query}
             placeholder="Enter your query here"
-            onChange={(event) => {
-              setQuery(event.target.value);
-            }}
+            onChange={(e) => setQuery(e.target.value)}
+            className="p-4 py-2 border text-base rounded-lg outline-none w-full max-w-lg"
           />
           <button
+            className="bg-blue-500 hover:bg-blue-400 p-2 px-4 rounded-lg text-base text-white"
             type="submit"
-            className="border-black border-2 mx-3 "
-            onClick={handleSubmit}
           >
-            Submit
+            Search
           </button>
         </div>
-      </div>
-      <div className="flex justify-center mt-8 text-sm">
-        <div className=" box-border p-4 border-4 border-black overflow-y-auto h-[400px] w-[300px] md:w-[470px] ">
-          <ul className="list-disc">
-            {data &&
-              data.hits.map((item) => (
-                <div
-                  key={item.objectID}
-                  className="text-black cursor-pointer bg-white"
-                >
-                  <li onClick={() => handleClick(item.objectID)}>
-                    <Link to="/details">{item.title}</Link>
-                  </li>
-                </div>
-              ))}
-          </ul>
-        </div>
+      </form>
+
+      <div className="flex-1 mt-20">
+        {!loading ? (
+          data ? (
+            <div className="w-full flex flex-col gap-2 text-lg font-medium">
+              {data.hits
+                .filter((item) => item.title && item.title !== "")
+                .map((item) => (
+                  <div
+                    key={item.objectID}
+                    className="text-black cursor-pointer hover:underline"
+                  >
+                    <Link to={`/details/${item.objectID}`}>{item.title}</Link>
+                  </div>
+                ))}
+            </div>
+          ) : (
+            <div className="flex-col justify-center">
+              <p className="text-6xl font-black text-black/10">No Results</p>
+            </div>
+          )
+        ) : (
+          <div className="flex-col justify-center">
+            <p className="text-6xl font-black text-black/10">Loading...</p>
+          </div>
+        )}
       </div>
     </div>
   );
