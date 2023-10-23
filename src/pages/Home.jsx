@@ -29,6 +29,7 @@ export const Home = () => {
       setSelobj({
         title: queryData.title,
         points: queryData.points,
+        children: queryData.children,
       });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -36,11 +37,11 @@ export const Home = () => {
   };
 
   return (
-    <div>
+    <div className="h-screen ">
       <div className="flex justify-center">
         <div className="mt-8">
           <input
-            className="border-black border-2 w-96"
+            className="border-black border-2 w-70 md:w-96"
             type="text"
             value={query}
             placeholder="Enter your query here"
@@ -50,7 +51,7 @@ export const Home = () => {
           />
           <button
             type="submit"
-            className="border-black border-2 mx-3"
+            className="border-black border-2 mx-3 "
             onClick={handleSubmit}
           >
             Submit
@@ -58,8 +59,8 @@ export const Home = () => {
         </div>
       </div>
       <div className="flex justify-center mt-8 text-sm">
-        <div className="box-border h-[400px] w-[470px] p-4 border-4 border-black overflow-scroll">
-          <ul>
+        <div className=" box-border p-4 border-4 border-black overflow-y-auto h-[400px] w-[300px] md:w-[470px] ">
+          <ul className="list-disc">
             {data &&
               data.hits.map((item) => (
                 <div

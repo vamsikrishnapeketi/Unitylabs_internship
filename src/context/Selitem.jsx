@@ -6,6 +6,7 @@ const SelitemProvider = ({ children }) => {
   const [selObj, setSelobj] = useState({
     title: "",
     points: null,
+    children: [],
   });
 
   return (
